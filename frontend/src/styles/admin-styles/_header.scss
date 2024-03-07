@@ -1,0 +1,30 @@
+@mixin headerBtn() {
+  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3.2rem;
+
+    button {
+      @include button-style;
+    }
+
+    .white-btn {
+      background-color: #FFFFFF;
+      border: 1px solid #6D6D6D;
+      color: #6D6D6D;
+
+      &:hover{
+        color: #FFFFFF;
+      }
+    }
+
+    .right-buttons {
+      display: flex;
+
+      button {
+        margin-left: 1rem;
+      }
+    }
+  }
+

@@ -1,0 +1,92 @@
+body {
+  background-color: $acc-bg-col;
+}
+
+.acoountSetup {
+  display: flex;
+  
+
+  > aside {
+    display: block;
+    height: 100vh;
+    width: 20%;
+
+    .logo {
+      @include logo;
+    }
+  }
+
+  > main {
+
+    
+
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 80%;
+
+    .buttonWrapper {
+      @include headerBtn;
+    }
+  
+  
+  > form {
+    font-weight: bold;
+    @include form();
+    display: flex;
+    flex-direction: row;
+
+
+    .basic-details{
+      .name{
+        display: flex;
+        flex-direction: row;
+      }
+  
+  
+  
+      .address{
+        display: flex;
+        flex-direction: column;
+  
+        .addition-addr{
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+        }
+  
+        .dropDrop{
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+        }
+  
+  
+      }
+
+      
+
+    }
+   
+    .advacedDeatail{
+      margin-left: 1.2rem;
+    }
+
+
+    select{
+      @include button-style;
+
+      background-color: #FFFFFF;
+      border: 1px solid #6D6D6D;
+      color: #6D6D6D;
+
+      &:hover{
+        color: #FFFFFF;
+      }
+    }
+
+  }
+
+  }
+}
