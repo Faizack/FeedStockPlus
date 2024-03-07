@@ -1,7 +1,20 @@
+import { FaRegCircleUser } from "react-icons/fa6";
+import { HiOutlineLogout } from "react-icons/hi";
+import { IoNotifications } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <div>Header</div>
+    <div className="Header">
+      <h1>Feedstock+ Source</h1>
+
+      <nav>
+            <Link to="/user/profile"><FaRegCircleUser color="#6D6D6D"/></Link>
+            <Link to="/"><IoNotifications color="#FFD700"  /></Link>
+            <Link to="/"><HiOutlineLogout color="#6D6D6D"/></Link>
+
+      </nav>
+    </div>
   )
 }
 

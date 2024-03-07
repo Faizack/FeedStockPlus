@@ -28,3 +28,38 @@
     }
   }
 
+
+@mixin dasboardHeader(){
+  display: flex;
+  align-items: center;
+
+
+  h2 {
+    font-weight: bolder;
+    
+  }
+
+  nav {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    height: fit-content;
+
+    a {
+      margin: 1rem;
+
+      svg {
+        width: 1.2rem; 
+        height: 1.2rem;
+      }
+    }
+
+    a:nth-child(2) svg {
+      transform: rotate(45deg) scale(1.2);
+
+      color: golden; 
+    }
+  }
+
+}
+

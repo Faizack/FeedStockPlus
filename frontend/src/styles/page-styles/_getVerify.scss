@@ -1,0 +1,53 @@
+.getVerify {
+  display: flex;
+
+  > aside {
+    position: relative;
+
+    height: 100vh;
+    width: 20%;
+
+    .logo {
+      @include logo;
+    }
+  }
+
+  .head-content {
+    width: 80%;
+    .Header {
+      justify-content: space-between;
+
+      @include dasboardHeader;
+    }
+
+    .buttonWrapper {
+      @include headerBtn;
+    }
+
+    main {
+      article {
+        margin-bottom: 1.2rem;
+      }
+
+      .allform {
+
+        display: flex;
+        flex-direction: row;
+        gap: 20rem;
+        h2{
+            margin-bottom: 1.2rem;
+        }
+        form {
+            @include form()
+        }
+        select {
+          @include button-style;
+        }
+        button {
+          @include button-style;
+
+        }
+      }
+    }
+  }
+}

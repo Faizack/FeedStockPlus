@@ -1,0 +1,35 @@
+.acoountSetup {
+
+    h2{
+        font-weight: bolder;
+        margin: 20px;
+    }
+    h3{
+        margin-bottom: 20px;
+    }
+  form {
+    display: flex;
+    flex-direction: column;
+
+
+    .company-detail {
+      display: flex;
+      flex-direction: column;
+
+      .vat-number {
+        display: flex;
+        flex-direction: row;
+        gap: 0.6rem;
+      }
+    }
+    .verify-details{
+        display: flex;
+        flex-direction: row;
+        gap: 1.2rem;
+        width: 90%;
+        padding: 0.8rem;
+        margin: 0.8rem;
+        transition: transform 0.3s;
+    }
+  }
+}
