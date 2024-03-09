@@ -23,9 +23,18 @@ a {
 @import "./page-styles/home";
 @import "./page-styles/login";
 @import "./page-styles/signUp";
+
 @import "./page-styles/accountSetup";
 @import "./page-styles/chooseOrganiztion";
 @import "./page-styles/supplierSetup";
-@import "./page-styles/dasboard";
 
+
+@import "./page-styles/dasboard";
+@import "./page-styles/profile";
 @import "./page-styles/getVerify";
+@import "./page-styles/inventory";
+
+@import "./page-styles/auditorTrust";
+
+@import "./component-styles/menu";
+@import "./page-styles/chatGpt"

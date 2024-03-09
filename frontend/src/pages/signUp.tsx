@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import SideLogo from "../components/SideLogo";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -13,9 +14,7 @@ const SignUp: React.FC = () => {
 
   return (
     <div className="Signup">
-      <aside>
-        <h1>FeedStockPlus</h1>
-      </aside>
+      <SideLogo />
       <main>
         <form>
           <label htmlFor="email">Email</label>

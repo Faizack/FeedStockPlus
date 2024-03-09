@@ -28,9 +28,14 @@ export const fetchSupplier:SupplierData={
   country_code: "+1",
 }
 
+
+
 export  const cities:string[] = ["New York", "London", "Paris", "Tokyo"];
 export  const countries:string[] = ["USA", "UK", "France", "Japan"];
 export  const countries_code:string[] = ["+1", "+91"];
+
+
+// export const dummyProducts =[]
 
 export const dummyProducts = [
   {
@@ -63,4 +68,93 @@ export const dummyProducts = [
     location: "Location 5",
     imageUrl: "https://via.placeholder.com/150",
   },
+];
+
+interface Supplier {
+  ID: string;
+  Supplier: string;
+  Country: string;
+  Date_request: string;
+  Status: string;
+  Verifier: string;
+}
+
+export const dummySupplierTable: Supplier[] = [
+  {
+    ID: "S321",
+    Supplier: "Bio-World",
+    Country: "PT",
+    Date_request: "01/12/2023",
+    Status: "pending",
+    Verifier: "S320",
+  },
+  {
+    ID: "S322",
+    Supplier: "Tech-Trade",
+    Country: "US",
+    Date_request: "02/15/2023",
+    Status: "approved",
+    Verifier: "S320",
+  },
+  {
+    ID: "S323",
+    Supplier: "MediCorp",
+    Country: "UK",
+    Date_request: "03/21/2023",
+    Status: "pending",
+    Verifier: "S324",
+  },
+  {
+    ID: "S324",
+    Supplier: "BioHealth",
+    Country: "DE",
+    Date_request: "04/05/2023",
+    Status: "rejected",
+    Verifier: "S322",
+  },
+  {
+    ID: "S321",
+    Supplier: "Bio-World",
+    Country: "PT",
+    Date_request: "01/12/2023",
+    Status: "pending",
+    Verifier: "S320",
+  },
+  {
+    ID: "S322",
+    Supplier: "Tech-Trade",
+    Country: "US",
+    Date_request: "02/15/2023",
+    Status: "approved",
+    Verifier: "S320",
+  },
+  {
+    ID: "S323",
+    Supplier: "MediCorp",
+    Country: "UK",
+    Date_request: "03/21/2023",
+    Status: "pending",
+    Verifier: "S324",
+  },
+  {
+    ID: "S324",
+    Supplier: "BioHealth",
+    Country: "DE",
+    Date_request: "04/05/2023",
+    Status: "rejected",
+    Verifier: "S322",
+  },
+];
+
+
+export const dummysignleSupplierTable: Supplier[] = [
+  {
+    ID: "S321",
+    Supplier: "Bio-World",
+    Country: "PT",
+    Date_request: "01/12/2023",
+    Status: "pending",
+    Verifier: "S320",
+  },
+
 ];

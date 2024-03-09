@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import Eye icons
+import SideLogo from "../components/SideLogo";
 
 
 const Login: React.FC = () => {
@@ -17,9 +18,8 @@ const Login: React.FC = () => {
   }
   return (
     <div className="login">
-      <aside>
-        <h1>FeedStockPlus</h1>
-      </aside>
+      <SideLogo />
+
       <main>
         <form>
           <label htmlFor="email">Email</label>

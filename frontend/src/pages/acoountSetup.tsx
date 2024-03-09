@@ -2,9 +2,12 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import Logo from "../components/logo";
 import { UserAccountData } from "../types/user";
 import toast from "react-hot-toast";
+import { cities, countries } from "../assets/dummy";
 
 const AcoountSetup: React.FC = () => {
-  const [formData, setFormData] = useState<UserAccountData>({
+  // Dummy data for cities and countries
+
+  const initialData: UserAccountData = {
     firstName: "",
     lastName: "",
     street: "",
@@ -14,11 +17,9 @@ const AcoountSetup: React.FC = () => {
     postcode: "",
     phone: "",
     mobile: "",
-  });
+  };
 
-  // Dummy data for cities and countries
-  const cities = ["New York", "London", "Paris", "Tokyo"];
-  const countries = ["USA", "UK", "France", "Japan"];
+  const [formData, setFormData] = useState<UserAccountData>(initialData);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -42,17 +43,7 @@ const AcoountSetup: React.FC = () => {
     }
 
     console.log(formData);
-    setFormData({
-      firstName: "",
-      lastName: "",
-      street: "",
-      apartment: "",
-      city: "",
-      country: "",
-      postcode: "",
-      phone: "",
-      mobile: "",
-    });
+    setFormData(initialData);
     toast.success("Successfully Save Detail!");
   };
 

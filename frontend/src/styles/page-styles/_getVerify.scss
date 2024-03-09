@@ -25,27 +25,25 @@
     }
 
     main {
+      button {
+        @include button-style;
+      }
       article {
         margin-bottom: 1.2rem;
       }
 
       .allform {
-
         display: flex;
         flex-direction: row;
         gap: 20rem;
-        h2{
-            margin-bottom: 1.2rem;
+        h2 {
+          margin-bottom: 1.2rem;
         }
         form {
-            @include form()
+          @include form();
         }
         select {
           @include button-style;
-        }
-        button {
-          @include button-style;
-
         }
       }
     }

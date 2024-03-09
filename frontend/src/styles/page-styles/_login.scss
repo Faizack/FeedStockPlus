@@ -3,10 +3,11 @@
   height: 100vh;
 
   > aside {
-    display: block;
-    width: 35%;
-    background-color: #f8d163;
-    color: white;
+
+    @include sideLogo;
+
+
+    // background-color: #f8d163;
   }
 
   > main {
@@ -22,18 +23,17 @@
       }
 
       .password-input {
-        position: relative; 
+        position: relative;
         input {
           width: 100%;
           padding-right: 40px; /* Adjust padding to accommodate the button */
         }
 
         button {
-
           position: absolute;
           margin: 0%;
-          top: 0.9%; 
-          right:  0%;
+          top: 0.9%;
+          right: 0%;
         }
       }
     }
@@ -42,8 +42,8 @@
     font-size: 0.8rem;
     width: fit-content;
     height: fit-content;
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
 
     button {
       display: inline-block;

@@ -1,23 +1,25 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import ButtonWrapper from "../components/buttonWrapper";
-import Header from "../components/header";
-import Logo from "../components/logo";
-import { AuditorFormData, GetVerificationData } from "../types/user";
+import { useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import toast from 'react-hot-toast';
+import ButtonWrapper from '../components/buttonWrapper';
+import Header from '../components/header';
+import Logo from '../components/logo';
+import { AuditorFormData, GetVerificationData } from '../types/user';
 
-const certificateType: string[] = ["certi_1", "certi_2"]; // Initialize certificateType array with options
-
+const certificateType: string[] = ['certi_1', 'certi_2']; // Initialize certificateType array with options
 const GetVerify = () => {
   const [formData, setFormData] = useState<GetVerificationData>({
-    certificateType: "",
-    scheme: "",
-    certificateNumber: "",
+    certificateType: '',
+    scheme: '',
+    certificateNumber: '',
   });
 
   const [auditorFormData, setAuditorFormData] = useState<AuditorFormData>({
-    auditorName: "",
-    auditorEmail: "",
+    auditorName: '',
+    auditorEmail: '',
   });
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -34,27 +36,36 @@ const GetVerify = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     for (const key in formData) {
-      if (formData[key as keyof GetVerificationData] === "") {
+      if (formData[key as keyof GetVerificationData] === '') {
         toast.error(`Please fill in ${key}`);
         return;
       }
     }
     console.log(formData);
-    toast.success("GetVerificationData submitted successfully");
+    toast.success('GetVerificationData submitted successfully');
+    setShowSuccessModal(true);
   };
 
   const handleAuditorSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     for (const key in auditorFormData) {
-      if (auditorFormData[key as keyof AuditorFormData] === "") {
+      if (auditorFormData[key as keyof AuditorFormData] === '') {
         toast.error(`Please fill in ${key}`);
         return;
       }
     }
 
     console.log(auditorFormData);
-    toast.success("Auditor invitation sent successfully");
+    toast.success('Auditor invitation sent successfully');
+  };
+
+  const handleClose = () => {
+    setShowSuccessModal(false);
+  };
+
+  const goToDashboard = () => {
+    toast.success('Redirecting to dashboard...');
   };
 
   return (
@@ -148,6 +159,29 @@ const GetVerify = () => {
               </form>
             </div>
           </div>
+
+          <Dialog
+            open={showSuccessModal}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">Thank you</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                The request has been sent to our network of approved validators on the Feedstock Trust decentralized verification protocol.
+              </DialogContentText>
+              <DialogContentText id="alert-dialog-description">
+                The verification can take up to 5 working days. You will be notified.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>OK</Button>
+              <Button onClick={goToDashboard} autoFocus>
+                Take me to dashboard
+              </Button>
+            </DialogActions>
+          </Dialog>
         </main>
       </div>
     </div>

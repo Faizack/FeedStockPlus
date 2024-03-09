@@ -63,3 +63,19 @@
 
 }
 
+@mixin sideLogo(){
+  display: block;
+  width: 35%;
+  font-weight: bolder;
+  font-size: larger;
+  
+  background-image: linear-gradient(
+    to right bottom,
+    #f8d163 0%,
+    #f8d163 33.33%,
+    #d8fce3 33.33%,
+    #d8fce3 66.66%,
+    #7cb789 66.66%,
+    #7cb789 100%
+  );
+}

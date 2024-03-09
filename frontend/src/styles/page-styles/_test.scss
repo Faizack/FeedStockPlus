@@ -1,0 +1,99 @@
+$top-left: #D8FCE3;
+
+$bottom-left: #7CB789;
+$middle-left: #D8FCE3;
+$bottom-right: #F8D163;
+$left-center:#D8FCE3;
+$center:#F8D163;
+$top-right:#F8D163;
+
+$right-center:#7CB789;
+
+
+
+.logo-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%; /* Adjust width as needed */
+  height: 100%; /* Adjust height as needed */
+}
+
+.circles-container {
+  position: absolute;
+}
+
+.circle {
+  position: absolute;
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
+  border-radius: 50%; /* Makes it a circle */
+}
+
+.top-left {
+  top: 0;
+  left: 0;
+  background-color: #D8FCE3; /* $top-left */
+}
+
+.bottom-left {
+  bottom: 0;
+  left: 0;
+  background-color: #7CB789; /* $bottom-left */
+}
+
+.middle-left {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: #D8FCE3; /* $middle-left */
+}
+
+.bottom-right {
+  bottom: 0;
+  right: 0;
+  background-color: #F8D163; /* $bottom-right */
+}
+
+.left-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #D8FCE3; /* $left-center */
+}
+
+.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #F8D163; /* $center */
+}
+
+.top-right {
+  top: 0;
+  right: 0;
+  background-color: #F8D163; /* $top-right */
+  border: 1px solid ; /* $top-right */
+}
+
+.right-center {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: #7CB789; /* $right-center */
+}
+
+.text-container {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+#Feedstock {
+  color: #425656;
+}
+
+#Plus {
+  color: #7CB789;
+}

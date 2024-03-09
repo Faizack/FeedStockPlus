@@ -5,8 +5,7 @@ import { SupplierData } from "../types/user";
 import { cities, countries, countries_code, fetchbasic } from "../assets/dummy";
 
 const SupplierSetup: React.FC = () => {
-
-  const [formData, setFormData] = useState<SupplierData>({
+  const initialData:SupplierData = {
     firstName: fetchbasic.firstName,
     lastName: fetchbasic.lastName,
     street: fetchbasic.street,
@@ -20,9 +19,9 @@ const SupplierSetup: React.FC = () => {
     company_country: "",
     company_number: "",
     country_code: "",
-  });
+  };
 
-  // Dummy data for cities and countries
+  const [formData, setFormData] = useState<SupplierData>(initialData);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -46,6 +45,7 @@ const SupplierSetup: React.FC = () => {
     }
 
     console.log(formData);
+    setFormData(initialData)
     toast.success("Successfully Save Detail!");
   };
 
