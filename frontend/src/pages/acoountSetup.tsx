@@ -34,7 +34,7 @@ const AcoountSetup: React.FC = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Check if any field is empty
+    
     for (const key in formData) {
       if (formData[key as keyof UserAccountData] === "") {
         toast.error(`Please fill in ${key}`);

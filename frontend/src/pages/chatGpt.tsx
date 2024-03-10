@@ -24,10 +24,10 @@ const Chat: React.FC = () => {
   ];
   const initialChatMessages: ChatMessage[] = initialdata;
 
-  const [inputValue, setInputValue] = useState<string>(""); // State to hold user input
+  const [inputValue, setInputValue] = useState<string>(""); 
   const [chatMessages, setChatMessages] =
-    useState<ChatMessage[]>(initialChatMessages); // State to hold chat messages
-  const chatContainerRef = useRef<HTMLDivElement>(null); // Ref to access chat container element
+    useState<ChatMessage[]>(initialChatMessages); 
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const acc: string = "F";
 
