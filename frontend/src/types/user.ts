@@ -1,6 +1,7 @@
+
 export interface UserAccountData {
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     street: string;
     apartment:string;
     city: string;
@@ -8,6 +9,7 @@ export interface UserAccountData {
     postcode:string;
     phone: string;
     mobile: string;
+    token?: string;
 
 }
 

@@ -1,15 +1,25 @@
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import Logo from "../components/logo";
-import { UserAccountData } from "../types/user";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { cities, countries } from "../assets/dummy";
+import Logo from "../components/logo";
+import { useSignupFinishMutation } from "../redux/api/userAPI";
+import { setUserAndToken } from "../redux/reducer/userReducer";
+import { MessageResponse, SignupCompleteResponse } from "../types/api";
+import { UserAccountData } from "../types/user";
 
-const AcoountSetup: React.FC = () => {
+interface AccountSetupProps {
+  verificationCode: string | undefined;
+}
+
+const AccountSetup: React.FC<AccountSetupProps> = ({ verificationCode }) => {
   // Dummy data for cities and countries
 
   const initialData: UserAccountData = {
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     street: "",
     apartment: "",
     city: "",
@@ -19,7 +29,54 @@ const AcoountSetup: React.FC = () => {
     mobile: "",
   };
 
+  const [signUpFinish, { data, error, isLoading }] = useSignupFinishMutation(
+    {}
+  );
+  const dispatch = useDispatch();
+  const navigator = useNavigate();
+
   const [formData, setFormData] = useState<UserAccountData>(initialData);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const token = verificationCode;
+
+    const formDataWithToken = { ...formData, token };
+
+    for (const key in formDataWithToken) {
+      if (formDataWithToken[key as keyof UserAccountData] === "") {
+        toast.error(`Please fill in ${key}`);
+        return;
+      }
+    }
+
+    console.log(formDataWithToken);
+
+    console.log(data, error, isLoading);
+
+    const res = await signUpFinish(formDataWithToken);
+
+    if ("data" in res) {
+      const data = res.data as SignupCompleteResponse;
+      const message = data.message || "null";
+
+      console.log("success Completed");
+      console.log("data: ", data, error, isLoading);
+
+      dispatch(
+        setUserAndToken({ user: data.data?.user, token: res.data.data.token })
+      );
+
+      setFormData(initialData);
+      toast.success(message);
+
+      navigator("/user/oraganization");
+    } else {
+      const error = res.error as FetchBaseQueryError;
+      const message = (error.data as MessageResponse).message || "";
+      toast.error(message);
+    }
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -31,20 +88,10 @@ const AcoountSetup: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    
-    for (const key in formData) {
-      if (formData[key as keyof UserAccountData] === "") {
-        toast.error(`Please fill in ${key}`);
-        return;
-      }
-    }
-
-    console.log(formData);
+  const handleBack = () => {
     setFormData(initialData);
-    toast.success("Successfully Save Detail!");
+
+    navigator("/login");
   };
 
   return (
@@ -54,7 +101,9 @@ const AcoountSetup: React.FC = () => {
       </aside>
       <main>
         <div className="buttonWrapper">
-          <button className="white-btn">Back</button>
+          <button className="white-btn" onClick={handleBack}>
+            Back
+          </button>
           <div className="right-buttons">
             <button className="white-btn">Cancel</button>
             <form onSubmit={handleSubmit}>
@@ -71,8 +120,8 @@ const AcoountSetup: React.FC = () => {
                 First Name
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="firstname"
+                  value={formData.firstname}
                   onChange={handleChange}
                 />
               </label>
@@ -81,8 +130,8 @@ const AcoountSetup: React.FC = () => {
                 Last Name
                 <input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
+                  name="lastname"
+                  value={formData.lastname}
                   onChange={handleChange}
                 />
               </label>
@@ -170,4 +219,4 @@ const AcoountSetup: React.FC = () => {
   );
 };
 
-export default AcoountSetup;
+export default AccountSetup;

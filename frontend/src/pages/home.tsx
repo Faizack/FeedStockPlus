@@ -11,7 +11,8 @@ const Home = () => {
         <div className="routing-container">
           <Link to={"/login"}>login </Link>
           <Link to={"/signUp"}>SignUp</Link>
-          <Link to={"/user/finish"} id="finish">
+          <Link to={"/user/home"}>Afterlogin</Link>
+          <Link to={"signup/pending/sdf"} id="finish">
             FinishUP
           </Link>
           <Link to={"/user/oraganization"} id="organuz">

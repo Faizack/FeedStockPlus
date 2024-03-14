@@ -5,12 +5,11 @@ import ErrorHandler from "../utils/utitlity.js";
 import { Chat } from "../models/chat.js";
 
 export const newChat = TryCatch(async (req, res, next) => {
-  const { prompt,userId } = req.body;
+  const { prompt, userId } = req.body;
 
-  console.log(prompt, userId);
+  console.log(prompt);
 
-
-  if (!prompt ) return next(new ErrorHandler("Please add your prompt", 400));
+  if (!prompt) return next(new ErrorHandler("Please add your prompt", 400));
 
   const chatSession = genAIModel.startChat({
     history: conversation,
@@ -26,6 +25,8 @@ export const newChat = TryCatch(async (req, res, next) => {
   // Check if a Chat document already exists for the given user
   const existingChat = await Chat.findOne({ user: userId });
 
+  let chatId;
+
   if (existingChat) {
     // Update the existing Chat document
     existingChat.data.push({
@@ -36,13 +37,16 @@ export const newChat = TryCatch(async (req, res, next) => {
         { role: "model", parts: messageResponse },
       ],
     });
-    
+
     await existingChat.save();
 
+    chatId = existingChat._id; // Using existing chatId
+
     return res.status(200).json({
-      status: 200,
-      message: "Success",
+      success: true,
+      message: "NewChat was successfully created",
       data: {
+        chatId: chatId,
         content: messageResponse,
       },
     });
@@ -65,10 +69,20 @@ export const newChat = TryCatch(async (req, res, next) => {
     // Save the new chat document to the database
     await newChat.save();
 
+    const lastIndex = newChat.data.length - 1;
+
+    console.log(lastIndex);
+
+    chatId = newChat.data[0].chatId;
+
+    console.log("New ChatID", chatId);
+
     return res.status(200).json({
       status: 200,
-      message: "Success",
+      message: "New Chat added",
       data: {
+        chatId: chatId,
+
         content: messageResponse,
       },
     });
@@ -78,6 +92,11 @@ export const newChat = TryCatch(async (req, res, next) => {
 // Endpoint to add a new chat to the existing conversation
 export const addChat = TryCatch(async (req, res, next) => {
   const { chatId, prompt, userId } = req.body;
+
+  console.log("ADD", chatId, prompt, userId);
+
+  if (!chatId || !prompt)
+    return next(new ErrorHandler("Please provide all details", 404));
 
   console.log(chatId, prompt, userId);
   // Find the chat document by both chatId and userId
@@ -116,7 +135,6 @@ export const addChat = TryCatch(async (req, res, next) => {
   });
 });
 
-
 // Endpoint to get all chats for a given user
 export const getAllChats = TryCatch(async (req, res, next) => {
   const { userId } = req.body;
@@ -125,9 +143,9 @@ export const getAllChats = TryCatch(async (req, res, next) => {
   const chats = await Chat.find({ user: userId });
 
   if (!chats) return next(new ErrorHandler("Chats not found", 404));
-  
-  const dataArrays = chats.map(chat => chat.data);
-  
+
+  const dataArrays = chats.map((chat) => chat.data);
+
   return res.status(200).json({
     status: 200,
     message: "Success",
@@ -135,11 +153,7 @@ export const getAllChats = TryCatch(async (req, res, next) => {
       chats: dataArrays,
     },
   });
-  
 });
-
-
-
 
 // get chat by chatId
 export const getChatById = TryCatch(async (req, res, next) => {
@@ -160,15 +174,12 @@ export const getChatById = TryCatch(async (req, res, next) => {
   });
 });
 
-
-
 export const deleteChatById = TryCatch(async (req, res, next) => {
-  const { chatId,userId } = req.body; 
-
+  const { chatId, userId } = req.body;
 
   const deletedChat = await Chat.updateOne(
-    { "user": userId.toString() }, 
-    { $pull: { "data": { "chatId": chatId } } }
+    { user: userId.toString() },
+    { $pull: { data: { chatId: chatId } } }
   );
 
   if (!deletedChat) {
@@ -181,4 +192,3 @@ export const deleteChatById = TryCatch(async (req, res, next) => {
     data: deletedChat,
   });
 });
-

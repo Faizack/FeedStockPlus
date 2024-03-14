@@ -3,11 +3,12 @@ import Logo from "../components/logo";
 import toast from "react-hot-toast";
 import { SupplierData } from "../types/user";
 import { cities, countries, countries_code, fetchbasic } from "../assets/dummy";
+import { useNavigate } from "react-router-dom";
 
 const SupplierSetup: React.FC = () => {
   const initialData:SupplierData = {
-    firstName: fetchbasic.firstName,
-    lastName: fetchbasic.lastName,
+    firstname: fetchbasic.firstname,
+    lastname: fetchbasic.lastname,
     street: fetchbasic.street,
     apartment: fetchbasic.apartment,
     city: fetchbasic.city,
@@ -19,6 +20,11 @@ const SupplierSetup: React.FC = () => {
     company_country: "",
     company_number: "",
     country_code: "",
+  };
+  const navigator=useNavigate()
+
+  const handleBack = () => {
+    navigator("/user/oraganization"); // Navigate to the oraganization page
   };
 
   const [formData, setFormData] = useState<SupplierData>(initialData);
@@ -56,11 +62,11 @@ const SupplierSetup: React.FC = () => {
       </aside>
       <main>
         <div className="buttonWrapper">
-          <button className="white-btn">Back</button>
+          <button className="white-btn" onClick={handleBack}>Back</button>
           <div className="right-buttons">
             <button className="white-btn">Cancel</button>
             <form onSubmit={handleSubmit}>
-              <button type="submit">Save</button>
+              <button type="submit" >Save</button>
             </form>
           </div>
         </div>
@@ -129,8 +135,8 @@ const SupplierSetup: React.FC = () => {
                     First Name
                     <input
                       type="text"
-                      name="firstName"
-                      value={formData.firstName}
+                      name="firstname"
+                      value={formData.firstname}
                       onChange={handleChange}
                     />
                   </label>
@@ -139,8 +145,8 @@ const SupplierSetup: React.FC = () => {
                     Last Name
                     <input
                       type="text"
-                      name="lastName"
-                      value={formData.lastName}
+                      name="lastname"
+                      value={formData.lastname}
                       onChange={handleChange}
                     />
                   </label>

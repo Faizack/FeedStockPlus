@@ -1,20 +1,19 @@
-import { useState } from "react";
-
 interface PropType {
   organization: string;
   description: string;
+  selectedOrganization: string; 
+  setSelectedOrganization: (organization: string) => void; 
 }
 
-const OrganizationCard = ({ organization, description }: PropType) => {
-  const [selected, setSelected] = useState<boolean>(false);
-
-  function handleRadioChange() {
-    setSelected(true);
-  }
-
-  function handleRadioUncheck() {
-    setSelected(false);
-  }
+const OrganizationCard = ({
+  organization,
+  description,
+  selectedOrganization,
+  setSelectedOrganization,
+}: PropType) => {
+  const handleRadioChange = () => {
+    setSelectedOrganization(organization); // Set selected organization
+  };
 
   return (
     <div className="Organization-card">
@@ -24,15 +23,12 @@ const OrganizationCard = ({ organization, description }: PropType) => {
           name="organization"
           id={`radio-${organization}`}
           onChange={handleRadioChange}
-          onBlur={handleRadioUncheck} // Add onBlur event to handle deselection
+          checked={selectedOrganization === organization} 
         />
         <label htmlFor={`radio-${organization}`}>
           <h1>{organization}</h1>
           <p>{description}</p>
         </label>
-      </div>
-      <div className="btn">
-        {selected && <button>Next</button>}
       </div>
     </div>
   );

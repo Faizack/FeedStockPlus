@@ -8,7 +8,6 @@ import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
 
 // Router
-import productRouter from "./routes/product.js";
 import userRouter from "./routes/user.js";
 import chatRouter from "./routes/chat.js";
 import supplierRouter from "./routes/supplier.js"
@@ -39,7 +38,6 @@ app.use(cors())
 // Use Router for API routes
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/chat", chatRouter);
-app.use("/api/v1/product", productRouter);
 app.use("/api/v1/supplier",supplierRouter); 
 app.use("/api/v1/auditor",AuditorRouter); 
 

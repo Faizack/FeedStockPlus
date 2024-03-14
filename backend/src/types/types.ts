@@ -17,7 +17,11 @@ export interface CompleteUserRequestBody {
     token: string;
     firstname: string;
     lastname: string;
-    address: Address;
+    street: string;
+    apartment?: string;
+    city: string;
+    country: string;
+    postcode: string;
     phone: string;
     mobile: string;
 

@@ -5,6 +5,10 @@ import { MarkdownRenderer } from "../components/mardownFormat";
 import RobotIcon from "../assets/robotIcon";
 import Rocket from "../assets/rocket";
 import Menu from "../components/chatMenu";
+import { useAddchatMutation, useNewchatMutation } from "../redux/api/chatAPI";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { MessageResponse } from "../types/api";
+import toast from "react-hot-toast";
 
 interface ChatMessage {
   prompt: string;
@@ -12,33 +16,58 @@ interface ChatMessage {
 }
 
 const Chat: React.FC = () => {
-  const initialdata = [
-    {
-      prompt: "Hello world",
-      content: "Do you want to program in hello world?",
-    },
-    {
-      prompt: "How are you?",
-      content: "I'm good, thank you!",
-    },
-  ];
-  const initialChatMessages: ChatMessage[] = initialdata;
+  const [NewChat] = useNewchatMutation();
+  const [AddChat] = useAddchatMutation();
 
-  const [inputValue, setInputValue] = useState<string>(""); 
-  const [chatMessages, setChatMessages] =
-    useState<ChatMessage[]>(initialChatMessages); 
+  const [chatId, setChatId] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const acc: string = "F";
 
   // Function to handle form submission
-  const handleSubmit = (): void => {
-    const newMessage: ChatMessage = {
-      prompt: inputValue,
-      content: "Dummy content for user input",
-    };
-    setChatMessages([...chatMessages, newMessage]);
-    // Clear input field
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (chatId === "") {
+      const res = await NewChat({ prompt: inputValue });
+
+      if ("data" in res) {
+        const message = (res.data as MessageResponse).message || "";
+        const data = res.data.data;
+        const newMessage: ChatMessage = {
+          prompt: inputValue,
+          content: data.content,
+        };
+        setChatMessages([...chatMessages, newMessage]);
+        console.log(data.chatId);
+
+        setChatId(data.chatId);
+        toast.success(message);
+      } else {
+        const error = res.error as FetchBaseQueryError;
+        const message = (error.data as MessageResponse).message || "";
+        toast.error(message);
+      }
+    } else {
+      const res = await AddChat({ chatId: chatId, prompt: inputValue });
+      if ("data" in res) {
+        const message = (res.data as MessageResponse).message || "";
+        const data = res.data.data;
+        const newMessage: ChatMessage = {
+          prompt: inputValue,
+          content: data.content,
+        };
+        console.log(data.chatId);
+        setChatMessages([...chatMessages, newMessage]);
+        toast.success(message);
+      } else {
+        const error = res.error as FetchBaseQueryError;
+        const message = (error.data as MessageResponse).message || "";
+        toast.error(message);
+      }
+    }
     setInputValue("");
   };
 
@@ -47,6 +76,12 @@ const Chat: React.FC = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ( e.key === "Enter") {
+      handleSubmit(e);
     }
   };
 
@@ -61,40 +96,47 @@ const Chat: React.FC = () => {
         <Menu />
       </aside>
       <main>
-        <div className="Chat" ref={chatContainerRef}>
-          {/* Render existing chat messages */}
-          {chatMessages.map((message, index) => (
-            <Fragment key={index}>
-              <div className="qs">
-                <div className="acc">{acc}</div>
-                <div className="txt">
-                  <MarkdownRenderer content={message.prompt} />
-                </div>
-              </div>
-
-              <div className="res">
-                <div className="icon">
-                  <RobotIcon />
-                </div>
-                <div className="txt">
-                  <div className="blink">
-                    <MarkdownRenderer content={message.content} />
+        {chatMessages.length === 0 ? (
+          <div className="New"><h1>FeedStock Plus</h1> </div>
+        ) : (
+          <div className="Chat" ref={chatContainerRef}>
+            {/* Render existing chat messages */}
+            {chatMessages.map((message, index) => (
+              <Fragment key={index}>
+                <div className="qs">
+                  <div className="acc">{acc}</div>
+                  <div className="txt">
+                    <MarkdownRenderer content={message.prompt} />
                   </div>
                 </div>
-              </div>
-            </Fragment>
-          ))}
-        </div>
+
+                <div className="res">
+                  <div className="icon">
+                    <RobotIcon />
+                  </div>
+                  <div className="txt">
+                    <div className="blink">
+                      <MarkdownRenderer content={message.content} />
+                    </div>
+                  </div>
+                </div>
+              </Fragment>
+            ))}
+          </div>
+        )}
 
         <div className="flexBody">
-          <div className="box">
-            <textarea
-              placeholder="Press Ctrl+Enter To Submit..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <button onClick={handleSubmit}>{<Rocket />}</button>{" "}
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="box">
+              <textarea
+                placeholder="Press Enter To Submit..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <button type="submit">{<Rocket />}</button>{" "}
+            </div>
+          </form>
         </div>
       </main>
     </div>
