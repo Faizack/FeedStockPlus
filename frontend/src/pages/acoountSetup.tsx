@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { cities, countries } from "../assets/dummy";
 import Logo from "../components/logo";
 import { useSignupFinishMutation } from "../redux/api/userAPI";
-import { setUserAndToken } from "../redux/reducer/userReducer";
+import { setUser } from "../redux/reducer/userReducer";
 import { MessageResponse, SignupCompleteResponse } from "../types/api";
 import { UserAccountData } from "../types/user";
 
@@ -63,9 +63,9 @@ const AccountSetup: React.FC<AccountSetupProps> = ({ verificationCode }) => {
       console.log("success Completed");
       console.log("data: ", data, error, isLoading);
 
-      dispatch(
-        setUserAndToken({ user: data.data?.user, token: res.data.data.token })
-      );
+      dispatch(setUser({ user: data.data?.user }));
+      localStorage.setItem("token", res.data.data.token)
+
 
       setFormData(initialData);
       toast.success(message);

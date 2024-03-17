@@ -9,7 +9,6 @@ export interface UserAccountData {
     postcode:string;
     phone: string;
     mobile: string;
-    token?: string;
 
 }
 

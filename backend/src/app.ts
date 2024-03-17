@@ -1,17 +1,17 @@
-import express from "express";
-import NodeCache from "node-cache";
 import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import morgan from "morgan";
-import dotenv from "dotenv"
+import NodeCache from "node-cache";
 
-import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
+import { connectDB } from "./utils/features.js";
 
 // Router
-import userRouter from "./routes/user.js";
+import AuditorRouter from "./routes/auditor.js";
 import chatRouter from "./routes/chat.js";
-import supplierRouter from "./routes/supplier.js"
-import AuditorRouter from "./routes/auditor.js"
+import supplierRouter from "./routes/supplier.js";
+import userRouter from "./routes/user.js";
 
 
 

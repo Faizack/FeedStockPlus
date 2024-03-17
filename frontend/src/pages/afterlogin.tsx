@@ -5,9 +5,6 @@ import Logo from "../components/logo";
 const Afterlogin = () => {
   const navigate = useNavigate();
 
-  function handleChatClick() {
-    navigate("/user/chat");
-  }
 
   return (
     <div className="inventory">
@@ -18,8 +15,13 @@ const Afterlogin = () => {
         <Header />
         <h1>Try RED Chat</h1>
         <br />
-        <button onClick={handleChatClick} id="btn-chat">Chat Link</button>
+
       </div>
+      <div>
+      <button onClick={()=>navigate("/user/chat")} id="btn-chat">Chat Link</button>
+        <button onClick={()=>navigate("/user/dashboard")} id="btn-chat">DashBoard</button>
+      </div>
+
     </div>
   );
 };

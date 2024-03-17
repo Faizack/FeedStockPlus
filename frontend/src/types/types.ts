@@ -11,6 +11,5 @@ export interface Address {
 
 export interface InitialUserState {
   user: UserAccountData | null;
-  token: string | null;
   isLoading: boolean;
 }

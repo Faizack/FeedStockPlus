@@ -21,9 +21,10 @@ interface GenerateTokenRequest {
 export const generateToken = ({ userId, email }: GenerateTokenRequest): string => {
   const payload = { userId, email };
 
-
+  console.log(secretKey);
   return jwt.sign(payload, secretKey, { expiresIn: "1h" }); 
 };
+
 interface CustomRequest extends Request {
   userId?:string;
 

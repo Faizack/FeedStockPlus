@@ -1,19 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
+  AuthUser,
   LoginResponse,
   MessageResponse,
   SignupCompleteResponse,
-  AuthUser,
 } from "../../types/api";
 import { UserAccountData } from "../../types/user";
-import { RootState } from "../store"; 
 export const userAPI = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://127.0.0.1:5000/api/v1/user",
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers) => {
       // Get token from the state
-      const token = (getState() as RootState).userReducer.token;
+      const token = localStorage.getItem("token");
       if (token) {
         // If token exists, set it in the headers
         headers.set('Authorization', `Bearer ${token}`);

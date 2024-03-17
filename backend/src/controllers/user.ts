@@ -6,6 +6,7 @@ import ErrorHandler from "../utils/utitlity.js";
 import { generateToken } from "../middlewares/auth.js";
 
 import bcrypt from "bcrypt";
+import { sendVerificationEmail } from "../mail/send.js";
 
 export const newUser = TryCatch(
   async (
@@ -16,9 +17,25 @@ export const newUser = TryCatch(
     const { email, password } = req.body;
 
     console.log("Email ", email, password);
-    if (!email || !password) {
-      return next(new ErrorHandler("Please give all required parameters", 400));
-    }
+    if (!email || !password)
+      return next(
+        new ErrorHandler("Please Enter all required parameters", 400)
+      );
+
+    // Find user by email
+    const user = await User.findOne({ email });
+
+    // If user  found, send error message
+    if (user) return next(new ErrorHandler("User Already Exist", 400));
+
+    // Find user by email
+    const pending = await PendingUser.findOne({ email });
+
+    // If pending found, send error message
+    if (pending)
+      return next(
+        new ErrorHandler("Peding User Please complete Verification ", 400)
+      );
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -32,11 +49,11 @@ export const newUser = TryCatch(
     await pendingUser.save();
 
     // Send verification email
-    // sendVerificationEmail(email, verificationToken);
+    sendVerificationEmail(email, verificationToken);
 
     return res.status(200).json({
       success: true,
-      message: `'Signup successful. Please verify your email.', ${pendingUser.email} `,
+      message: `Signup successful. Please verify your email : ${pendingUser.email} `,
     });
   }
 );
@@ -47,14 +64,24 @@ export const completeUser = TryCatch(
     res: Response,
     next: NextFunction
   ) => {
-    const { name, token, firstname, lastname, address, phone, mobile } =
-      req.body;
+    const {
+      token,
+      firstname,
+      lastname,
+      street,
+      apartment,
+      city,
+      country,
+      postcode,
+      phone,
+      mobile,
+    } = req.body;
 
     // Find pending user by verification token
-    if (!token || !firstname || !lastname || !address || !phone || !mobile) {
+    if (!token || !firstname || !lastname || !phone || !mobile) {
       return next(new ErrorHandler("Please give all required parameters", 400));
     }
-    
+
     const pendingUser = await PendingUser.findOne({ verificationToken: token });
 
     if (!pendingUser) {
@@ -69,11 +96,11 @@ export const completeUser = TryCatch(
       email: pendingUser.email,
       password: pendingUser.password,
       address: {
-        street: address.street,
-        apartment: address.apartment,
-        city: address.city,
-        country: address.country,
-        postcode: address.postcode,
+        street: street,
+        apartment: apartment,
+        city: city,
+        country: country,
+        postcode: postcode,
       },
       phone: phone,
       mobile: mobile,
@@ -85,10 +112,26 @@ export const completeUser = TryCatch(
     // Delete pending user
     await PendingUser.deleteOne({ _id: pendingUser._id });
 
-    res.status(200).send("Account setup completed successfully.");
+    // Create JWT token
+    const tokens = generateToken({
+      email: user.email,
+      userId: String(user._id),
+    });
+
+    // Send token in response
+    return res
+      .status(201)
+      .cookie("token", tokens, {
+        expires: new Date(Date.now() + 900000),
+        httpOnly: true,
+      })
+      .json({
+        success: true,
+        message: "Account setup completed successfully.",
+        data: { token: token, user: user },
+      });
   }
 );
-
 
 export const Login = async (
   req: Request,
@@ -97,43 +140,43 @@ export const Login = async (
 ) => {
   const { email, password } = req.body;
 
-  try {
-    // Check if email and password are provided
-    if (!email || !password) {
-      throw new ErrorHandler("Please provide email and password", 400);
-    }
+  // Check if email and password are provided
+  if (!email || !password) {
+    return next(new ErrorHandler("Please provide email and password", 400));
+  }
 
-    // Find user by email
-    const user = await User.findOne({ email });
+  // Find user by email
+  const user = await User.findOne({ email });
 
-    // If user not found, throw error
-    if (!user) {
-      throw new ErrorHandler("Invalid email or password", 401);
-    }
+  // If user not found, throw error
+  if (!user) {
+    return next(new ErrorHandler("user not found please signup", 401));
+  }
 
-    // Compare passwords
-    const match = await bcrypt.compare(password, user.password);
+  // Compare passwords
+  const match = await bcrypt.compare(password, user.password);
 
-    // If passwords don't match, throw error
-    if (!match) {
-      throw new ErrorHandler("Invalid email or password", 401);
-    }
+  // If passwords don't match, throw error
+  if (!match) {
+    return next(new ErrorHandler("Invalid email or password", 401));
+  }
 
-    // Create JWT token
-    const token = generateToken({email:email,userId: String(user._id)})
+  // Create JWT token
+  const token = generateToken({ email: email, userId: String(user._id) });
 
-    // Send token in response
-    res.status(200).json({
+  // Send token in response
+  res
+    .status(200)
+    .cookie("token", token, {
+      expires: new Date(Date.now() + 900000),
+      httpOnly: true,
+    })
+    .json({
       success: true,
       message: "Login successful",
-      token,
+      data: { token: token, user: user },
     });
-  } catch (error) {
-    next(error);
-  }
 };
-
-
 
 export const getUser = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -157,24 +200,31 @@ export const getUser = TryCatch(
   }
 );
 
-
 export const updateRole = TryCatch(
   async (
-    req: Request<{}, {},  {
-      role: string;
-      email: string;
-    }>,
+    req: Request<
+      {},
+      {},
+      {
+        role: string;
+        email: string;
+      }
+    >,
     res: Response,
     next: NextFunction
   ) => {
-    const { role,email } = req.body;
+    const { role, email } = req.body;
 
     // Check if the role and email parameters are provided
     if (!role || !email) {
       return next(new ErrorHandler("Role or email parameter is missing", 400));
     }
 
-    const user = await User.findOneAndUpdate({ email }, { role }, { new: true });
+    const user = await User.findOneAndUpdate(
+      { email },
+      { role },
+      { new: true }
+    );
 
     // Check if the user exists
     if (!user) {

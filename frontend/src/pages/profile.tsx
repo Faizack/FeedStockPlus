@@ -4,18 +4,24 @@ import ButtonWrapper from "../components/buttonWrapper";
 import Header from "../components/header";
 import Logo from "../components/logo";
 import logo from "../assets/svg/trusVeri.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const ProfilePage: React.FC = () => {
+
+  const user=useSelector((state:RootState)=>state.userReducer.user)
+
+
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    street: "",
-    apartment: "",
-    postcode: "",
-    city: "",
-    country: "",
-    phone: "",
-    mobile: "",
+    firstname: user?.firstname,
+    lastName: user?.lastname,
+    street: user?.street,
+    apartment: user?.apartment,
+    postcode: user?.postcode,
+    city: user?.city,
+    country: user?.country,
+    phone: user?.phone,
+    mobile: user?.mobile,
     company_name: "",
     company_country: "",
     country_code: "",
@@ -58,8 +64,8 @@ const ProfilePage: React.FC = () => {
                   First Name
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="firstname"
+                    value={formData.firstname}
                     onChange={handleChange}
                   />
                 </label>

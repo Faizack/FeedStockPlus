@@ -5,8 +5,6 @@ import { userReducer } from "./reducer/userReducer";
 import { chatReducer } from "./reducer/chatReducer";
 import { chatAPI } from "./api/chatAPI";
 
-// Define a type representing the combined state of all reducers
-type RootState = ReturnType<typeof store.getState>;
 
 export const server = import.meta.env.VITE_SERVER || "http://127.0.0.1:5000";
 
@@ -21,4 +19,4 @@ export const store = configureStore({
     getDefaultMiddleware().concat(userAPI.middleware, chatAPI.middleware),
 });
 
-export type { RootState }; // Export RootState for external use
+export type RootState = ReturnType<typeof store.getState>;

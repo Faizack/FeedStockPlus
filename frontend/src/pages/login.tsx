@@ -6,14 +6,14 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import SideLogo from "../components/SideLogo";
 import { useLoginMutation } from "../redux/api/userAPI";
-import { setUserAndToken } from "../redux/reducer/userReducer";
+import { setUser } from "../redux/reducer/userReducer";
 import { LoginResponse, MessageResponse } from "../types/api";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [Login, { isLoading }] = useLoginMutation();
+  const [Login] = useLoginMutation();
   const navigator=useNavigate()
   const dispatch=useDispatch()
 
@@ -24,13 +24,13 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email, password, isLoading);
     const res = await Login({ email, password });
 
     if ("data" in res) {
       const message = (res.data as LoginResponse).message || "";
       toast.success(message);
-      dispatch(setUserAndToken({user:res.data.data.user,token:res.data.data.token}))
+      dispatch(setUser({user:res.data.data.user}))
+      localStorage.setItem("token", res.data.data.token)
       navigator("/user/home")
     } else {
       const error = res.error as FetchBaseQueryError;

@@ -5,7 +5,6 @@ import { UserAccountData } from "../../types/user";
 // Define initial state
 const userInit: InitialUserState = {
   user: null,
-  token: null,
   isLoading: false,
 };
 
@@ -14,19 +13,17 @@ export const userReducer = createSlice({
   initialState: userInit,
   reducers: {
     // Action to set user information and token
-    setUserAndToken: (state, action: PayloadAction<{ user: UserAccountData, token: string }>) => {
+    setUser: (state, action: PayloadAction<{ user: UserAccountData }>) => {
       state.user = action.payload.user;
-      state.token = action.payload.token;
       state.isLoading = false;
     },
     // Action to reset user information and token
-    resetUserAndToken: (state) => {
+    resetUser: (state) => {
       state.user = null;
-      state.token = null;
       state.isLoading = false;
     },
   },
 });
 
 // Export actions
-export const { setUserAndToken, resetUserAndToken } = userReducer.actions;
+export const { setUser, resetUser } = userReducer.actions;
