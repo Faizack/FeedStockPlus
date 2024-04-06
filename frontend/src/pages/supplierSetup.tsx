@@ -1,27 +1,31 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import Logo from "../components/logo";
 import toast from "react-hot-toast";
-import { SupplierData } from "../types/user";
-import { cities, countries, countries_code, fetchbasic } from "../assets/dummy";
 import { useNavigate } from "react-router-dom";
+import { countries, countries_code } from "../assets/dummy";
+import Logo from "../components/logo";
+import { SupplierData } from "../types/user";
+import { useCreateSupplierMutation } from "../redux/api/supplierAPI";
+import { MessageResponse } from "../types/api";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useDispatch } from "react-redux";
+import { setSupplier } from "../redux/reducer/supplierReducer";
 
 const SupplierSetup: React.FC = () => {
-  const initialData:SupplierData = {
-    firstname: fetchbasic.firstname,
-    lastname: fetchbasic.lastname,
-    street: fetchbasic.street,
-    apartment: fetchbasic.apartment,
-    city: fetchbasic.city,
-    country: fetchbasic.country,
-    postcode: fetchbasic.postcode,
-    phone: fetchbasic.phone,
-    mobile: fetchbasic.mobile,
+  // const { user, isLoading } = useSelector(
+  //   (state: { userReducer: InitialUserState }) => state.userReducer
+  // );
+  // console.log("user",user);
+
+  const initialData: SupplierData = {
     company_name: "",
     company_country: "",
     company_number: "",
     country_code: "",
   };
-  const navigator=useNavigate()
+  const navigator = useNavigate();
+
+  const [createSupplier] = useCreateSupplierMutation();
+  const dispatch=useDispatch();
 
   const handleBack = () => {
     navigator("/user/oraganization"); // Navigate to the oraganization page
@@ -39,7 +43,7 @@ const SupplierSetup: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Check if any field is empty
@@ -51,8 +55,25 @@ const SupplierSetup: React.FC = () => {
     }
 
     console.log(formData);
-    setFormData(initialData)
-    toast.success("Successfully Save Detail!");
+
+    // Call setUserRole mutation with selectedOrganization
+    const res = await createSupplier(formData);
+
+    console.log("response", res);
+
+    if ("data" in res) {
+      const message = (res.data as MessageResponse).message || "";
+      const data=res.data.data 
+      dispatch(setSupplier({ data: data}));
+      toast.success(message);
+      navigator("/");
+    } else {
+      const error = res.error as FetchBaseQueryError;
+      const message = (error.data as MessageResponse).message || "";
+      toast.error(message);
+    }
+    setFormData(initialData);
+
   };
 
   return (
@@ -62,11 +83,13 @@ const SupplierSetup: React.FC = () => {
       </aside>
       <main>
         <div className="buttonWrapper">
-          <button className="white-btn" onClick={handleBack}>Back</button>
+          <button className="white-btn" onClick={handleBack}>
+            Back
+          </button>
           <div className="right-buttons">
             <button className="white-btn">Cancel</button>
             <form onSubmit={handleSubmit}>
-              <button type="submit" >Save</button>
+              <button type="submit">Save</button>
             </form>
           </div>
         </div>
@@ -127,7 +150,7 @@ const SupplierSetup: React.FC = () => {
 
             <h2>Verify Details</h2>
 
-            <div className="verify-details">
+            {/* <div className="verify-details">
               <br />
               <div className="basic-details">
                 <div className="name">
@@ -228,7 +251,7 @@ const SupplierSetup: React.FC = () => {
                 </label>
                 <br />
               </div>
-            </div>
+            </div> */}
           </div>
         </form>
       </main>

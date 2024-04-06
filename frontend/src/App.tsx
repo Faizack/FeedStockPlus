@@ -1,20 +1,19 @@
-import { lazy, Suspense, useEffect } from "react";
 import axios from "axios";
+import { lazy, Suspense, useEffect } from "react";
 
 import { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Route,
   BrowserRouter as Router,
   Routes,
   useParams,
 } from "react-router-dom";
+import Loading from "./components/loader/loading";
 import ProtectedRoute from "./components/protectedRoute";
 import { resetUser, setUser } from "./redux/reducer/userReducer";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { InitialUserState } from "./types/types";
 import { UserAccountData } from "./types/user";
-import Loading from "./components/loader/loading";
 
 const Login = lazy(() => import("./pages/login"));
 const SignUp = lazy(() => import("./pages/signUp"));
@@ -75,11 +74,10 @@ function App() {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
+          <Route path="/user/oraganization" element={<ChooseOrganization />} />
+          <Route path="/user/supplier/detail" element={<SupplierSetup />} />
+
           {/* Auth */}
-          <Route
-                path="/user/oraganization"
-                element={<ChooseOrganization />}
-              />
           <Route>
             <Route
               element={
@@ -96,13 +94,10 @@ function App() {
                 element={<AccountSetupWithParams />}
               />
             </Route>
-            <Route path="/user/supplier/detail" element={<SupplierSetup />} />
             // Afterlogin
             <Route
               element={<ProtectedRoute isAuthenticated={user ? true : false} />}
             >
-
-
               <Route path="/user/home" element={<Home />} />
 
               <Route path="/" element={<Afterlogin />} />

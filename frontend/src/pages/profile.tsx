@@ -11,6 +11,8 @@ const ProfilePage: React.FC = () => {
 
   const user=useSelector((state:RootState)=>state.userReducer.user)
 
+  const supplier=useSelector((state:RootState)=>state.SupplierReducer.supplier)
+
 
   const [formData, setFormData] = useState({
     firstname: user?.firstname,
@@ -22,10 +24,10 @@ const ProfilePage: React.FC = () => {
     country: user?.country,
     phone: user?.phone,
     mobile: user?.mobile,
-    company_name: "",
-    company_country: "",
-    country_code: "",
-    company_number: "",
+    company_name: supplier?.company_name,
+    company_country: supplier?.company_country,
+    country_code: supplier?.country_code,
+    company_number: supplier?.company_number,
   });
 
   const handleUserDetailSubmit = (event: React.FormEvent<HTMLFormElement>) => {

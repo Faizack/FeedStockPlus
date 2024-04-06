@@ -1,4 +1,4 @@
-import { UserAccountData } from "./user";
+import { SupplierData, UserAccountData } from "./user";
 
 export interface Address {
   street?: string;
@@ -11,5 +11,11 @@ export interface Address {
 
 export interface InitialUserState {
   user: UserAccountData | null;
+  isLoading: boolean;
+}
+
+
+export interface InitialSupplierState {
+  supplier: SupplierData | null;
   isLoading: boolean;
 }

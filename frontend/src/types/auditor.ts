@@ -7,7 +7,7 @@ export interface Supplier {
   Verifier: string;
 }
 
-export interface SupplierData {
+export interface SupplierDatas {
   data: Supplier[];
 }
 

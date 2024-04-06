@@ -39,9 +39,9 @@ const AccountSetup: React.FC<AccountSetupProps> = ({ verificationCode }) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const token = verificationCode;
+    const verifytoken = verificationCode;
 
-    const formDataWithToken = { ...formData, token };
+    const formDataWithToken = { ...formData, verifytoken };
 
     for (const key in formDataWithToken) {
       if (formDataWithToken[key as keyof UserAccountData] === "") {
@@ -61,7 +61,6 @@ const AccountSetup: React.FC<AccountSetupProps> = ({ verificationCode }) => {
       const message = data.message || "null";
 
       console.log("success Completed");
-      console.log("data: ", data, error, isLoading);
 
       dispatch(setUser({ user: data.data?.user }));
       localStorage.setItem("token", res.data.data.token)

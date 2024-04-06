@@ -1,3 +1,5 @@
+import { SupplierData } from "./user";
+
 export interface UserResponse {}
 
 export interface AuthUser {
@@ -25,6 +27,10 @@ interface dataSignup {
   mobile: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface NewSupplierResponse extends MessageResponse{
+  data: SupplierData;
 }
 export interface SignupCompleteResponse extends MessageResponse {
   data: {

@@ -13,7 +13,7 @@ export interface UserAccountData {
 }
 
 
-export interface SupplierData  extends UserAccountData {
+export interface SupplierData   {
     company_name:string;
     company_country:string;
     company_number:string;

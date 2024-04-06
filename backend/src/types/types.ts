@@ -13,7 +13,7 @@ export interface NewUserRequestBody {
 
 
 export interface CompleteUserRequestBody {
-    token: string;
+    verifytoken: string;
     firstname: string;
     lastname: string;
     street: string;

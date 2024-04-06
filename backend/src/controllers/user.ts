@@ -65,7 +65,7 @@ export const completeUser = TryCatch(
     next: NextFunction
   ) => {
     const {
-      token,
+      verifytoken,
       firstname,
       lastname,
       street,
@@ -77,13 +77,14 @@ export const completeUser = TryCatch(
       mobile,
     } = req.body;
 
-
     // Find pending user by verification token
-    if (!token || !firstname || !lastname || !phone || !mobile) {
+    if (!verifytoken || !firstname || !lastname || !phone || !mobile) {
       return next(new ErrorHandler("Please give all required parameters", 400));
     }
 
-    const pendingUser = await PendingUser.findOne({ verificationToken: token });
+    const pendingUser = await PendingUser.findOne({
+      verificationToken: verifytoken,
+    });
 
     if (!pendingUser) {
       return next(new ErrorHandler("Failed to find pending user", 401));
@@ -93,7 +94,6 @@ export const completeUser = TryCatch(
     const user = new User({
       firstname: firstname,
       lastname: lastname,
-      token,
       email: pendingUser.email,
       password: pendingUser.password,
       street: street,
@@ -111,8 +111,7 @@ export const completeUser = TryCatch(
     // Delete pending user
     await PendingUser.deleteOne({ _id: pendingUser._id });
 
-    // Create JWT token
-    const tokens = generateToken({
+    const token = generateToken({
       email: user.email,
       userId: String(user._id),
     });
@@ -120,7 +119,7 @@ export const completeUser = TryCatch(
     // Send token in response
     return res
       .status(201)
-      .cookie("token", tokens, {
+      .cookie("token", token, {
         expires: new Date(Date.now() + 900000),
         httpOnly: true,
       })
@@ -232,8 +231,8 @@ export const updateRole = TryCatch(
     }
 
     const user = await User.findOneAndUpdate(
-      { userId },
-      { role },
+      { _id: userId },
+      {  role: role.toLowerCase() },
       { new: true }
     );
 
@@ -242,7 +241,10 @@ export const updateRole = TryCatch(
       return next(new ErrorHandler("User not found", 404));
     }
 
-    res.status(200).send("User role updated successfully.");
+    res.status(200).json({
+      success: true,
+      message: "Role updated successfully",
+    });
   }
 );
 
