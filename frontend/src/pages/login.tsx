@@ -14,9 +14,8 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [Login] = useLoginMutation();
-  const navigator=useNavigate()
-  const dispatch=useDispatch()
-
+  const navigator = useNavigate();
+  const dispatch = useDispatch();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -29,9 +28,11 @@ const Login: React.FC = () => {
     if ("data" in res) {
       const message = (res.data as LoginResponse).message || "";
       toast.success(message);
-      dispatch(setUser({user:res.data.data.user}))
-      localStorage.setItem("token", res.data.data.token)
-      navigator("/user/home")
+      dispatch(setUser({ user: res.data.data.user }));
+      
+
+      localStorage.setItem("token", res.data.data.token);
+      navigator("/user/home");
     } else {
       const error = res.error as FetchBaseQueryError;
       const message = (error.data as MessageResponse).message || "";

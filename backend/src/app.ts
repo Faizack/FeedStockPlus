@@ -1,4 +1,6 @@
 import cors from "cors";
+import cookieParser from 'cookie-parser';
+
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
@@ -29,9 +31,12 @@ const port = Number(process.env.port) || Number(3000);
 const host = process.env.host || "127.0.0.1";
 const MongoDB_URL=process.env.MongoDB_URL
 
-app.use(express.json());
 app.use(morgan("dev"))
-app.use(cors())
+app.use(cookieParser());
+app.use(express.json({ limit: '50mb' }));
+app.use(cors({ origin: true, credentials: true }))
+
+
 
 
 

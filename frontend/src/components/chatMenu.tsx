@@ -11,8 +11,9 @@ import {
   Xicon,
 } from "../assets";
 
-
 import toast from "react-hot-toast";
+import { resetUser } from "../redux/reducer/userReducer";
+import { useDispatch } from "react-redux";
 
 interface HistoryItem {
   chatId: number;
@@ -28,14 +29,18 @@ const Menu: React.FC = () => {
   const settingRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [confirm, setConfirm] = useState(false);
-  const [user, setUser] = useState<any>({}); // Adjust user type as per your requirement
+
+  resetUser;
 
   const logOut = () => {
     toast.success("Logged out successfully");
-    setUser({});
+    dispatch(resetUser());
+    localStorage.removeItem("token");
+
     navigate("/login");
   };
 

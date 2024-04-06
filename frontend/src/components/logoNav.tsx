@@ -20,11 +20,11 @@ const LogoNav = () => {
       <Link to={"/"}>
         <IoIosList size={20} /> Subsubtain
       </Link>
-      <Link to={"/"}>
+      <Link to={"/auditor/trust"}>
         <MdChecklist size={20} /> Contracts
       </Link>
 
-      <Link to={"/"}>
+      <Link to={"/user/inventory"}>
         <MdOutlineInventory size={20} /> Inventory
       </Link>
 

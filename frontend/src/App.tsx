@@ -1,4 +1,6 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import axios from "axios";
+
 import { Toaster } from "react-hot-toast";
 import {
   Route,
@@ -7,6 +9,12 @@ import {
   useParams,
 } from "react-router-dom";
 import ProtectedRoute from "./components/protectedRoute";
+import { resetUser, setUser } from "./redux/reducer/userReducer";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { InitialUserState } from "./types/types";
+import { UserAccountData } from "./types/user";
+import Loading from "./components/loader/loading";
 
 const Login = lazy(() => import("./pages/login"));
 const SignUp = lazy(() => import("./pages/signUp"));
@@ -28,26 +36,58 @@ const AuditorTrust = lazy(() => import("./pages/auditorTrust"));
 const ChatGpt = lazy(() => import("./pages/chatGpt"));
 
 function App() {
-  const [user, setUser] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
-  const token = localStorage.getItem("token");
+  const { user, isLoading } = useSelector(
+    (state: { userReducer: InitialUserState }) => state.userReducer
+  );
+
   useEffect(() => {
-    if (token) {
-      setUser(true);
-    } else {
-      setUser(false);
-    }
-  }, [token]);
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await axios.get(
+            "http://127.0.0.1:5000/api/v1/user/",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = response.data as UserAccountData;
+          dispatch(setUser({ user: data }));
+        } else {
+          dispatch(resetUser());
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        dispatch(resetUser());
+      }
+    };
 
-  return (
+    fetchUserData();
+  }, [dispatch]);
+
+  return isLoading ? (
+    <Loading />
+  ) : (
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Auth */}
+          <Route
+                path="/user/oraganization"
+                element={<ChooseOrganization />}
+              />
           <Route>
-            <Route path="/" element={<Home />} />
             <Route
-              // element={<ProtectedRoute isAuthenticated={user ? false : true} />}
+              element={
+                <ProtectedRoute
+                  isAuthenticated={!user ? true : false}
+                  redirect="/"
+                />
+              }
             >
               <Route path="/login" element={<Login />} />
               <Route path="/signUp" element={<SignUp />} />
@@ -57,16 +97,15 @@ function App() {
               />
             </Route>
             <Route path="/user/supplier/detail" element={<SupplierSetup />} />
-
             // Afterlogin
             <Route
               element={<ProtectedRoute isAuthenticated={user ? true : false} />}
             >
-              <Route
-                path="/user/oraganization"
-                element={<ChooseOrganization />}
-              />
-              <Route path="/user/home" element={<Afterlogin />} />
+
+
+              <Route path="/user/home" element={<Home />} />
+
+              <Route path="/" element={<Afterlogin />} />
               <Route path="/user/chat" element={<ChatGpt />} />
 
               <Route path="/user/dashboard" element={<Dashboard />} />

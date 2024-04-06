@@ -6,16 +6,20 @@ import {
   SignupCompleteResponse,
 } from "../../types/api";
 import { UserAccountData } from "../../types/user";
+import Cookies from "js-cookie";
+
 export const userAPI = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://127.0.0.1:5000/api/v1/user",
+    credentials: "include",
     prepareHeaders: (headers) => {
       // Get token from the state
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token") || localStorage.getItem("token");
+
       if (token) {
         // If token exists, set it in the headers
-        headers.set('Authorization', `Bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
@@ -38,6 +42,13 @@ export const userAPI = createApi({
     login: builder.mutation<LoginResponse, AuthUser>({
       query: (data) => ({
         url: "/login",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    logout: builder.mutation<MessageResponse, AuthUser>({
+      query: (data) => ({
+        url: "/logout",
         method: "POST",
         body: data,
       }),

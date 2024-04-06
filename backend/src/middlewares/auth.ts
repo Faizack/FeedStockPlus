@@ -21,7 +21,6 @@ interface GenerateTokenRequest {
 export const generateToken = ({ userId, email }: GenerateTokenRequest): string => {
   const payload = { userId, email };
 
-  console.log(secretKey);
   return jwt.sign(payload, secretKey, { expiresIn: "1h" }); 
 };
 
@@ -33,25 +32,23 @@ interface CustomRequest extends Request {
 // Middleware to verify JWT token
 export const verifyTokenMiddleware = TryCatch(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization?.split(" ")[1];
-
+    const token = req.headers.authorization?.split(" ")[1] || req.cookies.token   ;
     if (!token) {
       return next(new ErrorHandler("No token provided.", 401));
     }
 
     // Verify the token
-    jwt.verify(token, secretKey, (err, decoded) => {
+    jwt.verify(token, secretKey, (err:jwt.VerifyErrors|null, decoded:Object|undefined) => {
       if (err) {
+        
         return next(new ErrorHandler("Failed to authenticate token.", 401));
       }
 
       const { userId } = decoded as { userId: string };
 
+
       // Attach userID to the request object
       req.body.userId = userId;
-
-
-      console.log(userId)
       next();
     });
   }

@@ -77,6 +77,7 @@ export const completeUser = TryCatch(
       mobile,
     } = req.body;
 
+
     // Find pending user by verification token
     if (!token || !firstname || !lastname || !phone || !mobile) {
       return next(new ErrorHandler("Please give all required parameters", 400));
@@ -95,13 +96,11 @@ export const completeUser = TryCatch(
       token,
       email: pendingUser.email,
       password: pendingUser.password,
-      address: {
-        street: street,
-        apartment: apartment,
-        city: city,
-        country: country,
-        postcode: postcode,
-      },
+      street: street,
+      apartment: apartment,
+      city: city,
+      country: country,
+      postcode: postcode,
       phone: phone,
       mobile: mobile,
     });
@@ -178,16 +177,26 @@ export const Login = async (
     });
 };
 
+export const Logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.clearCookie("token").status(200).json({
+    success: true,
+    message: "Logout successful",
+  });
+};
+
 export const getUser = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { email } = req.params;
+    const { userId } = req.body;
 
-    if (!email) {
-      return next(new ErrorHandler("Email parameter is required", 400));
+    if (!userId) {
+      return next(new ErrorHandler("U parameter is required", 400));
     }
 
-    const user = await User.findOne({ email });
-
+    const user = await User.findById(userId);
     if (!user) {
       return next(new ErrorHandler("User not found", 404));
     }
@@ -207,21 +216,23 @@ export const updateRole = TryCatch(
       {},
       {
         role: string;
-        email: string;
+        userId: string;
       }
     >,
     res: Response,
     next: NextFunction
   ) => {
-    const { role, email } = req.body;
+    const { role, userId } = req.body;
+
+    console.log("in update role", role, userId);
 
     // Check if the role and email parameters are provided
-    if (!role || !email) {
+    if (!role || !userId) {
       return next(new ErrorHandler("Role or email parameter is missing", 400));
     }
 
     const user = await User.findOneAndUpdate(
-      { email },
+      { userId },
       { role },
       { new: true }
     );
